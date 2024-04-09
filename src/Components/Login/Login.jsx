@@ -1,28 +1,51 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../Provider/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const { signInUser, signInWithGoogle,signInWithGitHub } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const {signInUser} = useContext(AuthContext)
-
-const handleLogin = e => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    const email =  e.target.email.value;
+    const email = e.target.email.value;
     const password = e.target.password.value;
-    console.log(email,password);
+    console.log(email, password);
 
-    signInUser(email,password)
+    signInUser(email, password)
+      .then((result) => {
+        console.log(result.user);
+        e.target.reset();
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handleGoogleLogIn = () => {
+    signInWithGoogle()
       .then(result => {
         console.log(result.user);
       })
       .catch(error => {
         console.error(error);
       })
-}
+  };
+  
+  const handleGitHubLogIn = () => {
+    signInWithGitHub()
+      .then(result => {
+        console.log(result.user);
+      })
+      .catch(error => {
+        console.error(error);
+      })
+  }
 
   return (
-    <div className="hero min-h-screen bg-base-200">
+    <div className="hero min-h-screen bg-base-200 text-center">
       <div className="hero-content flex-col">
         <div className="text-center">
           <h1 className="text-5xl font-bold">Login now!</h1>
@@ -61,8 +84,21 @@ const handleLogin = e => {
             <div className="form-control mt-6">
               <button className="btn btn-primary">Login</button>
             </div>
-            <p>New here? Please<Link to={'/registration'}><button className="btn btn-link">register</button></Link></p>
           </form>
+          <div>
+            <p>
+              New here? Please
+              <Link to={"/registration"}>
+                <button className="btn btn-link">register</button>
+              </Link>
+            </p>
+          </div>
+          <div>
+            <p>
+              Login with<button onClick={handleGoogleLogIn} className="btn btn-link">google</button>
+              <button onClick={handleGitHubLogIn} className="btn btn-link">github</button>
+            </p>
+          </div>
         </div>
       </div>
     </div>

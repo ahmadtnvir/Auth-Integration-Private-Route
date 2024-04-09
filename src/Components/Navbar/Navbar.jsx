@@ -3,35 +3,42 @@ import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../Provider/AuthProvider";
 
 const Navbar = () => {
-
-  const {user, logOut} = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
 
   const handleLogOut = () => {
     logOut()
-    .then(() => {
-      console.log('user logged out successfully')
-  })
-    .catch(error => {
-      console.error(error);
-    })
-  }
+      .then(() => {
+        console.log("user logged out successfully");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   const links = (
     <>
       <li>
-        <NavLink to={'/'}>Home</NavLink>
+        <NavLink to={"/"}>Home</NavLink>
       </li>
       <li>
-        <NavLink to={'/login'}>Login</NavLink>
+        <NavLink to={"/login"}>Login</NavLink>
       </li>
       <li>
-        <NavLink to={'/registration'}>Registration</NavLink>
+        <NavLink to={"/registration"}>Registration</NavLink>
       </li>
       <li>
-        <NavLink to={'/order'}>Order</NavLink>
+        <NavLink to={"/order"}>Order</NavLink>
       </li>
-
-      
+      {user && (
+        <>
+          <li>
+            <NavLink to={"/profile"}>Profile</NavLink>
+          </li>
+          <li>
+            <NavLink to={"/dashboard"}>Dashboard</NavLink>
+          </li>
+        </>
+      )}
     </>
   );
 
@@ -62,25 +69,26 @@ const Navbar = () => {
             {links}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">Auth Integration & Private Route</a>
+        <a className="btn btn-ghost text-xl">
+          Auth Integration & Private Route
+        </a>
       </div>
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          {links}
-        </ul>
+        <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
       <div className="navbar-end">
-        {
-          user ? <>
-          <span>{user.email}</span>
-          <a onClick={handleLogOut} className="btn btn-sm">Sign Out</a>
-          </> 
-          : <Link to={'/login'}>
+        {user ? (
+          <>
+            <span>{user.email}</span>
+            <a onClick={handleLogOut} className="btn btn-sm">
+              Sign Out
+            </a>
+          </>
+        ) : (
+          <Link to={"/login"}>
             <button className="btn btn-sm">Login</button>
           </Link>
-          
-        }
-        
+        )}
       </div>
     </div>
   );
